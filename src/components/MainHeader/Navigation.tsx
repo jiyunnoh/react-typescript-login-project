@@ -1,8 +1,7 @@
 import React from 'react';
-
 import classes from './Navigation.module.css';
 
-const Navigation = (props) => {
+const Navigation = (props: { isLoggedIn: any; onLogout: React.MouseEventHandler<HTMLButtonElement> | undefined; }) => {
   return (
     <nav className={classes.nav}>
       <ul>
