@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
@@ -15,11 +15,21 @@ const emailReducer = (state: { value: string; }, action: { type: string; val: st
   return { value: '', isValid: false };
 };
 
+const passwordReducer = (state: { value: string; }, action: { type: string; val: string; }) => {
+  if (action.type === 'USER_INPUT') {
+    return { value: action.val, isValid: action.val?.trim().length > 6};
+  }
+  if (action.type === 'INPUT_BLUR') {
+    return { value: state.value, isValid: state.value.trim().length > 6};
+  }
+  return { value: '', isValid: false };
+};
+
 const Login = (props: { onLogin: (arg0: string, arg1: string) => void; }) => {
   // const [enteredEmail, setEnteredEmail] = useState('');
   // const [emailIsValid, setEmailIsValid] = useState(true);
-  const [enteredPassword, setEnteredPassword] = useState('');
-  const [passwordIsValid, setPasswordIsValid] = useState(true);
+  // const [enteredPassword, setEnteredPassword] = useState('');
+  // const [passwordIsValid, setPasswordIsValid] = useState(true);
   const [formIsValid, setFormIsValid] = useState(false);
 
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
@@ -27,32 +37,36 @@ const Login = (props: { onLogin: (arg0: string, arg1: string) => void; }) => {
     isValid: false,
   });
 
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     console.log('Checking the form validity.')
-  //     setFormIsValid(
-  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6
-  //     );
-  //   }, 500);
+  const [passwordState, dispatchPassword] = useReducer(passwordReducer, {
+    value: '',
+    isValid: false,
+  });
 
-  //   return () => {
-  //     console.log('Clean Up!')
-  //     clearTimeout(identifier);
-  //   };
-  // }, [enteredEmail, enteredPassword]);
+  // destructuring & alias assignment
+  // To avoid too often re-rendering, update dependency variables.
+  const { isValid : emailIsValid } = emailState;
+  const { isValid : passwordIsValid } = emailState;
+
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log('Checking the form validity.')
+      setFormIsValid(
+        emailIsValid && passwordIsValid
+      );
+    }, 500);
+
+    return () => {
+      console.log('Clean Up!')
+      clearTimeout(identifier);
+    };
+  }, [emailIsValid, passwordIsValid]);
 
   const emailChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatchEmail({ type: 'USER_INPUT', val: event.target.value });
-    setFormIsValid(
-      event.target.value.includes('@') && enteredPassword.trim().length > 6
-    );
   };
 
   const passwordChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEnteredPassword(event.target.value);
-    setFormIsValid(
-      emailState.isValid && event.target.value.trim().length > 6
-    );
+    dispatchPassword({ type: 'USER_INPUT', val: event.target.value });
   };
 
   const validateEmailHandler = () => {
@@ -61,12 +75,13 @@ const Login = (props: { onLogin: (arg0: string, arg1: string) => void; }) => {
   };
 
   const validatePasswordHandler = () => {
-    setPasswordIsValid(enteredPassword.trim().length > 6);
+    //TODO: If removes val, will throw an error.
+    dispatchEmail({ type: 'INPUT_BLUR', val: '' });
   };
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    props.onLogin(emailState.value, enteredPassword);
+    props.onLogin(emailState.value, passwordState.value);
   };
 
   return (
@@ -86,14 +101,14 @@ const Login = (props: { onLogin: (arg0: string, arg1: string) => void; }) => {
           />
         </div>
         <div
-          className={`${classes.control} ${passwordIsValid === false ? classes.invalid : ''
+          className={`${classes.control} ${passwordState.isValid === false ? classes.invalid : ''
             }`}
         >
           <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
-            value={enteredPassword}
+            value={passwordState.value}
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
           />
