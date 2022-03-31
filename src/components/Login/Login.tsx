@@ -1,9 +1,10 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
 import React from 'react';
+import AuthContext from '../../store/auth-context';
 
 const emailReducer = (state: { value: string; }, action: { type: string; val: string; }) => {
   if (action.type === 'USER_INPUT') {
@@ -25,7 +26,7 @@ const passwordReducer = (state: { value: string; }, action: { type: string; val:
   return { value: '', isValid: false };
 };
 
-const Login = (props: { onLogin: (arg0: string, arg1: string) => void; }) => {
+const Login = () => {
   // const [enteredEmail, setEnteredEmail] = useState('');
   // const [emailIsValid, setEmailIsValid] = useState(true);
   // const [enteredPassword, setEnteredPassword] = useState('');
@@ -46,6 +47,8 @@ const Login = (props: { onLogin: (arg0: string, arg1: string) => void; }) => {
   // To avoid too often re-rendering, update dependency variables.
   const { isValid : emailIsValid } = emailState;
   const { isValid : passwordIsValid } = emailState;
+
+  const authCtx = useContext(AuthContext);
 
   useEffect(() => {
     const identifier = setTimeout(() => {
@@ -81,7 +84,8 @@ const Login = (props: { onLogin: (arg0: string, arg1: string) => void; }) => {
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+    // authCtx.onLogin(emailState.value, passwordState.value);
+    authCtx.onLogin();
   };
 
   return (
