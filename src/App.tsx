@@ -28,18 +28,18 @@ function App() {
   };
 
   return (
-    // <React.Fragment>
-    <AuthContext.Provider value={{
-      // boolean 값 대신 state 넣어줘서 state가 업데이트될 때마다 반영됨.
-      isLoggedIn: isLoggedIn
-    }}>
-      <MainHeader onLogout={logoutHandler} />
+    <AuthContext.Provider
+      value={{
+        // boolean 값 대신 state 넣어줘서 state가 업데이트될 때마다 반영됨.
+        isLoggedIn: isLoggedIn,
+        onLogout: logoutHandler,
+      }}>
+      <MainHeader />
       <main>
         {!isLoggedIn && <Login onLogin={loginHandler} />}
         {isLoggedIn && <Home onLogout={logoutHandler} />}
       </main>
-      </AuthContext.Provider>
-    // </React.Fragment>
+    </AuthContext.Provider>
   );
 }
 

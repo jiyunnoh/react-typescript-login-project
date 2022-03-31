@@ -1,12 +1,13 @@
 import React from 'react';
+import Button from '../UI/Button/Button';
 import Card from '../UI/Card/Card';
 import classes from './Home.module.css';
 
-const Home = (props: any) => {
+const Home = (props: { onLogout: React.MouseEventHandler<HTMLButtonElement> | undefined; }) => {
   return (
     <Card className={classes.home}>
       <h1>Welcome back!</h1>
-      {props.onLogout}
+      <Button onClick={props.onLogout}>Logout</Button>
     </Card>
   );
 };

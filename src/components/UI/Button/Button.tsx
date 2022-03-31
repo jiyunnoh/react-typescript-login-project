@@ -3,9 +3,9 @@ import classes from './Button.module.css';
 
 const Button = (props: { 
   type?: 'button' | 'submit' | 'reset' | undefined; 
-  className: string; 
+  className?: string; 
   onClick?: React.MouseEventHandler<HTMLButtonElement>; 
-  disabled: boolean | undefined; 
+  disabled?: boolean | undefined; 
   children?: React.ReactNode;
 }) => {
   return (
