@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useRef, useImperativeHandle } from "react";
 
 import classes from "./Input.module.css";
 
-const Input = (props: { isValid: boolean; id: string; label: string; type: string; value: string; onChange: React.ChangeEventHandler<HTMLInputElement>; onBlur: React.FocusEventHandler<HTMLInputElement>; }) => {
+const Input = React.forwardRef((props: { isValid: boolean; id: string; label: string; type: string; value: string; onChange: React.ChangeEventHandler<HTMLInputElement>; onBlur: React.FocusEventHandler<HTMLInputElement>; }, ref) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const activate = () => {
+        inputRef.current!.focus();
+    }
+
+    useImperativeHandle(ref, () => {
+        return {
+            focus: activate
+        }
+    });
+
     return (
         <div
             className={`
@@ -12,6 +24,7 @@ const Input = (props: { isValid: boolean; id: string; label: string; type: strin
         >
             <label htmlFor={props.id}>{props.label}</label>
             <input
+                ref={inputRef}
                 type={props.type}
                 id={props.id}
                 value={props.value}
@@ -20,6 +33,6 @@ const Input = (props: { isValid: boolean; id: string; label: string; type: strin
             />
         </div>
     );
-}
+});
 
 export default Input;

@@ -5,7 +5,6 @@ const Button = (props: {
   type?: 'button' | 'submit' | 'reset' | undefined; 
   className?: string; 
   onClick?: React.MouseEventHandler<HTMLButtonElement>; 
-  disabled?: boolean | undefined; 
   children?: React.ReactNode;
 }) => {
   return (
@@ -13,7 +12,6 @@ const Button = (props: {
       type={props.type || 'button'}
       className={`${classes.button} ${props.className}`}
       onClick={props.onClick}
-      disabled={props.disabled}
     >
       {props.children}
     </button>
