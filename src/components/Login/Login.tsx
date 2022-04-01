@@ -9,7 +9,7 @@ import Input from '../UI/Input/Input';
 
 const emailReducer = (state: { value: string; }, action: { type: string; val: string; }) => {
   if (action.type === 'USER_INPUT') {
-    return { value: action.val, isValid: action.val?.includes('@') };
+    return { value: action.val, isValid: action.val.includes('@') };
   }
   if (action.type === 'INPUT_BLUR') {
     return { value: state.value, isValid: state.value.includes('@') };
@@ -19,7 +19,7 @@ const emailReducer = (state: { value: string; }, action: { type: string; val: st
 
 const passwordReducer = (state: { value: string; }, action: { type: string; val: string; }) => {
   if (action.type === 'USER_INPUT') {
-    return { value: action.val, isValid: action.val?.trim().length > 6 };
+    return { value: action.val, isValid: action.val.trim().length > 6 };
   }
   if (action.type === 'INPUT_BLUR') {
     return { value: state.value, isValid: state.value.trim().length > 6 };
@@ -47,7 +47,7 @@ const Login = () => {
   // destructuring & alias assignment
   // To avoid too often re-rendering, update dependency variables.
   const { isValid: emailIsValid } = emailState;
-  const { isValid: passwordIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
 
   const authCtx = useContext(AuthContext);
 
@@ -88,6 +88,7 @@ const Login = () => {
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log(formIsValid);
     if (formIsValid) {
       // authCtx.onLogin(emailState.value, passwordState.value);
       authCtx.onLogin();
